@@ -1,11 +1,10 @@
-import joblib
-import pandas as pd
 from fastapi import FastAPI
 
 app = FastAPI()
-model = joblib.load("models/step1-status_classifier.joblib")
+
+#domain where this api is hosted for example : localhost:5000/docs to see swagger documentation automagically generated.
 
 
 @app.get("/")
 def home():
-    return {"message":"Hello This is loan Prediction"}
+    return {"message":"Hello HAHAHA"}
