@@ -17,3 +17,4 @@ websockets
 wrapt 
 pandas
 imblearn
+requests
