@@ -11,7 +11,7 @@ pydantic
 pylint 
 six 
 starlette 
-urllib
+urllib3
 uvicorn 
 websockets 
 wrapt 
