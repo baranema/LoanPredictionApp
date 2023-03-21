@@ -7,4 +7,4 @@ model = joblib.load("https://storage.cloud.google.com/modelstep1/step1-status_cl
  
 @app.get("/")
 def home():
-    return {"message":"Hello yass"}
+    return {"message":"Hello with model"}
