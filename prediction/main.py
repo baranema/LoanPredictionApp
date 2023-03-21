@@ -9,7 +9,7 @@ ACCEPTED_REJECTED_MAPPING = {0: "Rejected", 1: "Accepted"}
 
 @app.get("/")
 def home():
-    return {"message":"Hello with dada!!!"}
+    return {"message":"Hello with yujuu!!!"}
 
 def predict_accepted_rejected(model, entry):
     """Get data from entry object as a dict"""
@@ -24,3 +24,7 @@ def predict_accepted_rejected(model, entry):
         "accepted_proba": predicted_proba[:, 1][0],
         "rejected_proba": predicted_proba[:, 0][0]
     }
+ 
+@app.post("/step1_accepted_rejected_prediction/")
+async def predict_accepted_rejected_query(loan: LoanStep1):
+    return predict_accepted_rejected(model, loan)
