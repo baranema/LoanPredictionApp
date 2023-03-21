@@ -1,7 +1,6 @@
 import joblib
 import pandas as pd
-from urllib.request import urlopen
-from sklearn.externals import joblib
+from urllib.request import urlopen 
 from fastapi import FastAPI
 
 app = FastAPI()
