@@ -16,5 +16,5 @@ uvicorn
 websockets 
 wrapt 
 pandas
-joblib
+pickle
 imblearn
