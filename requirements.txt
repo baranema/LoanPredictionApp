@@ -16,3 +16,4 @@ websockets
 wrapt 
 pandas
 joblib
+imblearn
