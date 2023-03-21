@@ -9,7 +9,7 @@ ACCEPTED_REJECTED_MAPPING = {0: "Rejected", 1: "Accepted"}
 
 @app.get("/")
 def home():
-    return {"message":"Hello with model!!!"}
+    return {"message":"Hello with dada!!!"}
 
 def predict_accepted_rejected(model, entry):
     """Get data from entry object as a dict"""
