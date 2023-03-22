@@ -1,7 +1,7 @@
 import joblib
 from fastapi import FastAPI
 import pandas as pd
-from prediction.step1_loan import LoanStep1
+from prediction.loan_classes import LoanStep1
 
 app = FastAPI()
 model = joblib.load("prediction/models/step1-status_classifier.joblib")

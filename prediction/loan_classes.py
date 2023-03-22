@@ -39,10 +39,10 @@ class LoanStep1(BaseModel):
         purpose object
     '''
 
-    loan_amnt: float = 2500.0
-    dti: float = 0.308
-    emp_length: str = "5 years"
-    purpose: str = "other"
+    loan_amnt: float = None
+    dti: float = None
+    emp_length: str = None
+    purpose: str =  None
 
     @validator("loan_amnt")
     def loan_amnt_must_be_positive(cls, value):
