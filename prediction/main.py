@@ -9,13 +9,11 @@ ACCEPTED_REJECTED_MAPPING = {0: "Rejected", 1: "Accepted"}
 
 @app.get("/")
 def home():
-    return {"message":"Hello with yujuu!!!"}
+    return {"message":"Hello. This is loan acceptance prediction :)"}
 
-def predict_accepted_rejected(model, entry):
-    """Get data from entry object as a dict"""
+def predict_accepted_rejected(model, entry): 
     new_entry = pd.DataFrame.from_dict(entry.get_entry_dict())
-
-    """ Predict new data based on threshold """
+ 
     prediction = model.predict(new_entry)
     predicted_proba = model.predict_proba(new_entry)
  
