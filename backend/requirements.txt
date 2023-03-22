@@ -12,8 +12,7 @@ pylint
 six 
 starlette 
 urllib3
-uvicorn 
-websockets 
+uvicorn
 wrapt 
 pandas
 imblearn

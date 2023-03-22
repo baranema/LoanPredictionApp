@@ -1,7 +1,7 @@
 import joblib
 from fastapi import FastAPI
 import pandas as pd
-from prediction.loan_classes import LoanStep1
+from prediction.loan_classes import LoanStep1, LoanStep2
 
 app = FastAPI()
 model = joblib.load("prediction/models/step1-status_classifier.joblib")
@@ -26,3 +26,7 @@ def predict_accepted_rejected(model, entry):
 @app.post("/step1_accepted_rejected_prediction/")
 async def predict_accepted_rejected_query(loan: LoanStep1):
     return predict_accepted_rejected(model, loan)
+
+@app.post("/step2_grade_prediction/")
+async def predict_grade_query(loan: LoanStep2):
+    return {}
