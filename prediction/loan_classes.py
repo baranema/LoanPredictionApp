@@ -1,4 +1,5 @@
-from pydantic import BaseModel, validator
+from typing import Optional
+from pydantic import Field, BaseModel, validator
 
 EMP_LENGTH_MAPPING = {
     '< 1 year': 0,
@@ -39,10 +40,10 @@ class LoanStep1(BaseModel):
         purpose object
     '''
 
-    loan_amnt: float = None
-    dti: float = None
-    emp_length: str = None
-    purpose: str =  None
+    loan_amnt: Optional[float] = Field(2500.0, ge=1, le=10000000000)
+    dti: float = 0.308
+    emp_length: str = "5 years"
+    purpose: str = "other"
 
     @validator("loan_amnt")
     def loan_amnt_must_be_positive(cls, value):
@@ -77,3 +78,38 @@ class LoanStep1(BaseModel):
         data["purpose"] = [PURPOSE_VALUES[self.purpose]]
  
         return data
+
+    
+# class LoanStep2(BaseModel):
+#     open_acc: float = 4.0
+#     loan_amnt: float = 5000.0
+#     sec_app_fico_range_low: float = 565.0
+#     annual_inc_joint: float = 77500.0
+#     mo_sin_old_rev_tl_op: float = 100.0
+#     bc_util: float = 13.4
+#     total_rev_hi_lim: float = 8700.0
+#     tot_hi_cred_lim: float = 35519.0
+#     term: int = 36
+#     inq_last_12m: float = 1.0
+#     verification_status_joint: str = "Not Verified"
+#     purpose: str = "debt_consolidation"
+#     total_bc_limit: float = 7200.0
+#     fico_range_low: float = 715.0
+#     open_rv_24m: float = 4.0
+#     mo_sin_rcnt_rev_tl_op: float = 1.0
+#     num_bc_sats: float = 2.0
+#     all_util: float = 78.0
+#     sec_app_fico_range_high: float = 569.0
+#     num_tl_op_past_12m: float = 2.0
+#     acc_open_past_24mths: float = 5.0
+#     bc_open_to_buy: float = 6233.0
+#     verification_status: str = "Not Verified"
+#     sec_app_open_acc: float = 7.0
+#     pct_tl_nvr_dlq: float = 83.3
+#     fico_range_high: float = 719.0
+#     num_actv_rev_tl: float = 2.0
+#     open_rv_12m: float = 1.0
+#     percent_bc_gt_75: float = 0.0
+#     mo_sin_rcnt_tl: float = 1.0
+#     inq_fi: float = 0.0
+#     annual_inc: float = 33000.0
