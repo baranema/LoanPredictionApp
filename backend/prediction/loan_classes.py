@@ -52,13 +52,14 @@ class LoanStep1(BaseModel):
     
     @validator("emp_length")
     def emp_length_must_have_value(cls, value):
-        if value not in EMP_LENGTH_MAPPING.keys():
+        if value not in EMP_LENGTH_MAPPING.keys() and value not in EMP_LENGTH_MAPPING.values(): 
             raise ValueError(f"expected emp_length values are {list(EMP_LENGTH_MAPPING.keys())}. Received value - {value}")
+        
         return value
    
     @validator("purpose")
     def purpose_must_have_value(cls, value):
-        if value not in PURPOSE_MAPPING.keys():
+        if value not in PURPOSE_MAPPING.keys() and value not in PURPOSE_MAPPING.values():
             raise ValueError(f"expected purpose values are {list(PURPOSE_MAPPING.keys())}. Received value - {value}")
         return value
    
@@ -66,8 +67,17 @@ class LoanStep1(BaseModel):
         data = {} 
         data["loan_amnt"] = [self.loan_amnt]
         data["dti"] = [self.dti]
-        data["emp_length"] = [EMP_LENGTH_MAPPING[self.emp_length]]
-        data["purpose"] = [PURPOSE_MAPPING[self.purpose]]
+
+        if self.emp_length not in EMP_LENGTH_MAPPING.values():
+            data["emp_length"] = [EMP_LENGTH_MAPPING[self.emp_length]]
+        else:
+            data["emp_length"] = self.emp_length
+      
+        if self.purpose not in PURPOSE_MAPPING.values():
+            data["purpose"] = [PURPOSE_MAPPING[self.purpose]]
+        else:
+            data["purpose"] = self.purpose
+        
         return data
 
     
