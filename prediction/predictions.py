@@ -28,6 +28,7 @@ def predict_grade(model, loans):
     for loan in loans:
         new_entry = pd.DataFrame.from_dict(loan.get_entry_dict())
         
+        main_prediction = model.predict(new_entry)
         predicted_proba = model.predict_proba(new_entry)
  
         grades = list(GRADES_MAPPING.values())
@@ -46,8 +47,12 @@ def predict_grade(model, loans):
             res_str = f"{res_grades[0]}"
         else:
             res_str = f"{res_grades[0]}-{res_grades[1]}"
+         
+        results[i] = {
+            "grade_category": res_str,
+            "predicted_grade": GRADES_MAPPING[main_prediction[0]]
+        }
 
-        results[i] = res_str
         i+=1 
     
     return results
@@ -59,6 +64,7 @@ def predict_subgrade(model, loans):
     for loan in loans:
         new_entry = pd.DataFrame.from_dict(loan.get_entry_dict())
         
+        main_prediction = model.predict(new_entry)
         predicted_proba = model.predict_proba(new_entry)
  
         subgrades = list(SUB_GRADE_MAPPING.values())
@@ -70,8 +76,11 @@ def predict_subgrade(model, loans):
         res_subrades = [sorted_items[i][0] for i in range(5)]
 
         res_str = f"{res_subrades[0]}-{res_subrades[len(res_subrades)-1]}"
-        results[i] = res_str
         
-        i+=1 
+        results[i] = {
+            "subgrade_category": res_str,
+            "predicted_subgrade": SUB_GRADE_MAPPING[main_prediction[0]]
+        }
+        i+=1
     
     return results
