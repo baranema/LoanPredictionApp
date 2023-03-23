@@ -3,7 +3,7 @@ import streamlit as st
 import pandas as pd 
 
 # Define the API endpoint URL
-API_URL = 'https://step1model.herokuapp.com/step1_accepted_rejected_prediction/'
+API_URL = 'https://eb-loan-prediction-backend.herokuapp.com/step1_accepted_rejected_prediction/'
 
 # Define the streamlit app
 def acc_pred():
@@ -57,5 +57,3 @@ def acc_pred():
             st.dataframe(df)
         else:
             st.write(f'Sorry, there was an error making the prediction. Please try again later. Error message - {predictions}')
-            
-acc_pred()
