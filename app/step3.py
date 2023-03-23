@@ -25,18 +25,26 @@ def subgrade_pred():
     if st.button('Predict'):
         status, predictions = get_prediction(loan_info)
         df = pd.DataFrame(loan_info)
-        df.insert(0,'sub_grade','')
-        df['sub_grade'] = "Unknown" 
         
+        df.insert(0,'subgrade_category','')
+        df['subgrade_category'] = "Unknown" 
+        
+        df.insert(0,'predicted_subgrade','')
+        df['predicted_subgrade'] = "Unknown"
+
         if status == 200: 
             for index, prediction in predictions.items(): 
                 new_index = int(index)
 
                 if prediction is not None:
-                    df.at[new_index, 'sub_grade']= prediction
+                    if prediction['subgrade_category'] is not None:
+                        df.at[new_index, 'subgrade_category']= prediction['subgrade_category']
+
+                    if prediction['predicted_subgrade'] is not None:
+                        df.at[new_index, 'predicted_subgrade']= prediction['predicted_subgrade']
             
-            df = df.sort_values(by="sub_grade", ascending=True)
-            
+            df = df.sort_values(by="predicted_subgrade", ascending=True) 
             st.dataframe(df) 
+            
         else:
             st.write(f'Sorry, there was an error making the prediction. Please try again later. Error message - {predictions}')
