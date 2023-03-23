@@ -1,15 +1,5 @@
 import pandas as pd
-
-ACCEPTED_REJECTED_MAPPING = {0: "Rejected", 1: "Accepted"}
-GRADES_MAPPING = {
-    0: 'A',
-    1: 'B',
-    2: 'C',
-    3: 'D',
-    4: 'E',
-    5: 'F',
-    6: 'G',
-}
+from mappings import ACCEPTED_REJECTED_MAPPING, GRADES_MAPPING, SUB_GRADE_MAPPING
 
 def predict_accepted_rejected(model, loans): 
     results = {}
@@ -58,6 +48,30 @@ def predict_grade(model, loans):
             res_str = f"{res_grades[0]}-{res_grades[1]}"
 
         results[i] = res_str
+        i+=1 
+    
+    return results
+
+def predict_subgrade(model, loans): 
+    results = {}
+    i = 0
+
+    for loan in loans:
+        new_entry = pd.DataFrame.from_dict(loan.get_entry_dict())
+        
+        predicted_proba = model.predict_proba(new_entry)
+ 
+        subgrades = list(SUB_GRADE_MAPPING.values())
+        probs = predicted_proba.tolist()[0]
+        
+        subgrades_res = {subgrades[i]: probs[i] for i in range(len(subgrades))} 
+
+        sorted_items = sorted(subgrades_res.items(), key=lambda x: x[1], reverse=True)
+        res_subrades = [sorted_items[i][0] for i in range(5)]
+
+        res_str = f"{res_subrades[0]}-{res_subrades[len(res_subrades)-1]}"
+        results[i] = res_str
+        
         i+=1 
     
     return results
