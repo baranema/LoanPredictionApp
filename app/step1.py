@@ -5,8 +5,12 @@ import pandas as pd
 # Define the API endpoint URL
 API_URL = 'https://eb-loan-prediction-backend.herokuapp.com/step1_accepted_rejected_prediction/'
 
+def acceptance_val(val):
+    color = '#1d915b' if val == "ACCEPTED" else '#911d2d'
+    return f'background-color: {color}'
+
 # Define the streamlit app
-def acc_pred():
+def acc_pred(): 
     st.title('Loan Acceptance Prediction')
     st.write('Enter the following details to check if your loan application will be accepted or rejected:')
 
@@ -48,12 +52,10 @@ def acc_pred():
                 new_index = int(index)
                 if prediction is not None:
                     if prediction['Loan_Acceptance'] == 'Accepted': 
-                        df.at[new_index, 'acceptance']= "ACCEPTED"
-                        st.write('Your loan application is accepted.')
-                        st.subheader('Your loan application is :green[ACCEPTED].')
+                        df.at[new_index, 'acceptance']= "ACCEPTED" 
                     elif prediction['Loan_Acceptance'] == 'Rejected':
                         df.at[new_index, 'acceptance']= "REJECTED"
-                        st.subheader('Your loan application is :red[REJECTED].')
-            st.dataframe(df)
+             
+            st.dataframe(df.style.applymap(acceptance_val, subset=['acceptance'])) 
         else:
             st.write(f'Sorry, there was an error making the prediction. Please try again later. Error message - {predictions}')
