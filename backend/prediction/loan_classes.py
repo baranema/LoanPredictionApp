@@ -51,12 +51,13 @@ class LoanStep1(BaseModel):
     purpose: str = "other"
     
     @validator("emp_length")
-    def emp_length_must_have_value(cls, value):
-        if "float" in str(type(value)):
-            value = int(value)
-        
-        if value not in EMP_LENGTH_MAPPING.keys() and value not in EMP_LENGTH_MAPPING.values(): 
-            raise ValueError(f"expected emp_length values are {list(EMP_LENGTH_MAPPING.keys())}. Received value - {value}")
+    def emp_length_must_have_value(cls, value): 
+        if value not in EMP_LENGTH_MAPPING.keys(): 
+            if value.isnumeric():
+                value = int(value)
+            
+            if value not in EMP_LENGTH_MAPPING.values():
+                raise ValueError(f"expected emp_length values are {list(EMP_LENGTH_MAPPING.keys())}. Received value - {value}")
         
         return value
    
