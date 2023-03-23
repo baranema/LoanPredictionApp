@@ -78,70 +78,80 @@ class LoanStep1(BaseModel):
         if self.emp_length not in EMP_LENGTH_MAPPING.values():
             data["emp_length"] = [EMP_LENGTH_MAPPING[self.emp_length]]
         else:
-            data["emp_length"] = self.emp_length
+            data["emp_length"] = [self.emp_length]
       
         if self.purpose not in PURPOSE_MAPPING.values():
             data["purpose"] = [PURPOSE_MAPPING[self.purpose]]
         else:
-            data["purpose"] = self.purpose
+            data["purpose"] = [self.purpose]
         
         return data
 
-    
+
 class LoanStep2(BaseModel):
-    open_acc: Optional[float] = Field(4.0, ge=1, le=10**10)
-    loan_amnt: Optional[float] = Field(5000.0, ge=1, le=10**10)
-    sec_app_fico_range_low: Optional[float] = Field(565.0, ge=1, le=10**10)
-    annual_inc_joint: Optional[float] = Field(77500.0, ge=1, le=10**10)
-    mo_sin_old_rev_tl_op: Optional[float] = Field(100.0, ge=1, le=10**10)
-    bc_util: Optional[float] = Field(13.4, ge=1, le=10**10)
-    total_rev_hi_lim: Optional[float] = Field(8700.0, ge=1, le=10**10)
-    tot_hi_cred_lim: Optional[float] = Field(35519.0, ge=1, le=10**10)
-    inq_last_12m: Optional[float] = Field(1.0, ge=1, le=10**10)
+    mo_sin_old_rev_tl_op: Optional[float] = Field(390.0, ge=0, le=10000000000)
+    percent_bc_gt_75: Optional[float] = Field(0.0, ge=0, le=10000000000)
+    bc_util: Optional[float] = Field(74.7, ge=0, le=10000000000)
+    sec_app_fico_range_high: Optional[float] = Field(579.0, ge=0, le=10000000000)
+    tot_hi_cred_lim: Optional[float] = Field(242711.0, ge=0, le=10000000000)
+    annual_inc: Optional[float] = Field(95557.0, ge=0, le=10000000000)
+    inq_last_12m: Optional[float] = Field(0.0, ge=0, le=10000000000)
+    mo_sin_rcnt_rev_tl_op: Optional[float] = Field(20.0, ge=0, le=10000000000)
+    num_bc_tl: Optional[float] = Field(2.0, ge=0, le=10000000000)
+    inq_fi: Optional[float] = Field(0.0, ge=0, le=10000000000)
+    sec_app_mort_acc: Optional[float] = Field(1.0, ge=0, le=10000000000)
+    open_rv_12m: Optional[float] = Field(0.0, ge=0, le=10000000000)
+    sec_app_num_rev_accts: Optional[float] = Field(15.0, ge=0, le=10000000000)
+    num_rev_accts: Optional[float] = Field(9.0, ge=0, le=10000000000)
+    num_tl_op_past_12m: Optional[float] = Field(0.0, ge=0, le=10000000000)
+    open_rv_24m: Optional[float] = Field(1.0, ge=0, le=10000000000)
     verification_status_joint: str = "Not Verified"
-    purpose: str = "debt_consolidation"
-    total_bc_limit: Optional[float] = Field(7200.0, ge=1, le=10**10)
-    fico_range_low: Optional[float] = Field(715.0, ge=1, le=10**10)
-    open_rv_24m: Optional[float] = Field(4.0, ge=1, le=10**10)
-    mo_sin_rcnt_rev_tl_op: Optional[float] = Field(1.0, ge=1, le=10**10)
-    num_bc_sats: Optional[float] = Field(2.0, ge=1, le=10**10)
-    all_util: Optional[float] = Field(78.0, ge=1, le=10**10)
-    sec_app_fico_range_high: Optional[float] = Field(569.0, ge=1, le=10**10)
-    num_tl_op_past_12m: Optional[float] = Field(2.0, ge=1, le=10**10)
-    acc_open_past_24mths: Optional[float] = Field(5.0, ge=1, le=10**10)
-    bc_open_to_buy: Optional[float] = Field(6233.0, ge=1, le=10**10)
+    total_rev_hi_lim: Optional[float] = Field(59000.0, ge=0, le=10000000000)
+    sec_app_fico_range_low: Optional[float] = Field(575.0, ge=0, le=10000000000)
     verification_status: str = "Not Verified"
-    sec_app_open_acc: Optional[float] = Field(7.0, ge=1, le=10**10)
-    pct_tl_nvr_dlq: Optional[float] = Field(83.3, ge=1, le=10**10)
-    fico_range_high: Optional[float] = Field(719.0, ge=1, le=10**10)
-    num_actv_rev_tl: Optional[float] = Field(2.0, ge=1, le=10**10)
-    open_rv_12m: Optional[float] = Field(1.0, ge=1, le=10**10)
-    percent_bc_gt_75: Optional[float] = Field(0.0, ge=1, le=10**10)
-    mo_sin_rcnt_tl: Optional[float] = Field(1.0, ge=1, le=10**10)
-    inq_fi: Optional[float] = Field(0.0, ge=1, le=10**10)
-    annual_inc: Optional[float] = Field(33000.0, ge=1, le=10**10)
-
-    # @validator("term")
-    # def term_must_have_value(cls, value):
-    #     if value not in TERM_MAPPING.keys():
-    #         raise ValueError(f"expected term values are {list(TERM_MAPPING.keys())}. Received value - {value}")
-    #     return value
+    mo_sin_rcnt_tl: Optional[float] = Field(17.0, ge=0, le=10000000000)
+    purpose: str = "debt_consolidation"
+    num_sats: Optional[float] = Field(9.0, ge=0, le=10000000000)
+    annual_inc_joint: Optional[float] = Field(161357.0, ge=0, le=10000000000)
+    bc_open_to_buy: Optional[float] = Field(15267.0, ge=0, le=10000000000)
+    fico_range_high: Optional[float] = Field(739.0, ge=0, le=10000000000)
+    pct_tl_nvr_dlq: Optional[float] = Field(95.0, ge=0, le=10000000000)
+    acc_open_past_24mths: Optional[float] = Field(2.0, ge=0, le=10000000000)
+    loan_amnt: Optional[float] = Field(17000.0, ge=1, le=10000000000)
+    fico_range_low: Optional[float] = Field(735.0, ge=0, le=10000000000)
+    total_bal_ex_mort: Optional[float] = Field(63764.0, ge=0, le=10000000000)
+    term: Optional[float] = Field(60, ge=0, le=10000000000)
+    total_bc_limit: Optional[float] = Field(48000.0, ge=0, le=10000000000)
+    mo_sin_old_il_acct: Optional[float] = Field(160.0, ge=0, le=10000000000)
+    all_util: Optional[float] = Field(60.0, ge=0, le=10000000000)
+    mort_acc: Optional[float] = Field(2.0, ge=0, le=10000000000)
+    num_il_tl: Optional[float] = Field(9.0, ge=0, le=10000000000)
     
-    # @validator("verification_status")
-    # @validator("verification_status_joint")
-    # def verification_status_must_have_value(cls, value):
-    #     expected_status = ['Not Verified' 'Source Verified' 'Verified']
-    #     if value not in expected_status:
-    #         raise ValueError(f"expected verification_status values are {expected_status}. Received value - {value}")
-    #     return value
-        
-    # @validator("purpose")
-    # def purpose_must_have_value(cls, value):
-    #     print(len(['debt_consolidation' 'other' 'credit_card' 'home_improvement' 'medical'
-    #         'vacation' 'renewable_energy' 'small_business' 'car' 'moving' 'house'
-    #         'major_purchase' 'wedding']))
-    #     print(len(list(PURPOSE_MAPPING.keys())))
+    @validator("verification_status")
+    def verification_status_must_have_value(cls, value):
+        expected_status = ['Not Verified', 'Source Verified', 'Verified']
+        if value not in expected_status:
+            raise ValueError(f"expected verification_status values are {expected_status}. Received value - {value}")
+        return value
 
-    #     if value not in PURPOSE_MAPPING.keys():
-    #         raise ValueError(f"expected purpose values are {list(PURPOSE_MAPPING.keys())}. Received value - {value}")
-    #     return value
+    @validator("verification_status_joint")
+    def verification_status_joint_must_have_value(cls, value):
+        expected_status = ['Not Verified', 'Source Verified', 'Verified']
+        if value not in expected_status:
+            raise ValueError(f"expected verification_status values are {expected_status}. Received value - {value}")
+        return value
+        
+    @validator("purpose")
+    def purpose_must_have_value(cls, value):
+        if value not in PURPOSE_MAPPING.keys() and value not in PURPOSE_MAPPING.values():
+            raise ValueError(f"expected purpose values are {list(PURPOSE_MAPPING.keys())}. Received value - {value}")
+        return value
+
+    def get_entry_dict(self):
+        data = {} 
+
+
+        for col, val  in vars(self).items():
+            data[col] = [val]
+             
+        return data
