@@ -1,5 +1,5 @@
 import pandas as pd
-from mappings import ACCEPTED_REJECTED_MAPPING, GRADES_MAPPING, SUB_GRADE_MAPPING
+from prediction.mappings import ACCEPTED_REJECTED_MAPPING, GRADES_MAPPING, SUB_GRADE_MAPPING
 
 def predict_accepted_rejected(model, loans): 
     results = {}
