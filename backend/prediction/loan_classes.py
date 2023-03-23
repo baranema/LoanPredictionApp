@@ -46,7 +46,7 @@ class LoanStep1(BaseModel):
     '''
 
     loan_amnt: Optional[float] = Field(2500.0, ge=1, le=10000000000)
-    dti: float = Field(0.308, ge=1, le=10000000000)
+    dti: float = Field(0.308, ge=0, le=10000000000)
     emp_length: str = "5 years"
     purpose: str = "other"
     
