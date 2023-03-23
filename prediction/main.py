@@ -7,6 +7,8 @@ app = FastAPI()
 model = joblib.load("prediction/models/step1-status_classifier.joblib")
 ACCEPTED_REJECTED_MAPPING = {0: "Rejected", 1: "Accepted"}
 
+print(type(model.named_steps['model']).__name__)
+
 @app.get("/")
 def home():
     return {"message":"Hello. This is loan acceptance prediction ;]"}

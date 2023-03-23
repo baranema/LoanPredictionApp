@@ -16,4 +16,5 @@ uvicorn
 wrapt 
 pandas
 imblearn
+lightgbm
 requests
