@@ -20,17 +20,17 @@ def app():
         emp_length = st.selectbox('Employment Length', ['< 1 year', '1 year', '2 years', '3 years', '4 years', '5 years', '6 years', '7 years', '8 years', '9 years', '10+ years'])
         purpose = st.selectbox('Loan Purpose', ['debt_consolidation', 'small_business', 'home_improvement', 'major_purchase', 'credit_card', 'other', 'house', 'vacation', 'car', 'medical', 'moving', 'renewable_energy', 'wedding', 'educational'])
 
-        loan_info = {
+        loan_info = [{
             'loan_amnt': loan_amnt,
             'dti': dti,
             'emp_length': emp_length,
             'purpose': purpose
-        }
+        }]
     else:
         uploaded_file = st.file_uploader('Upload CSV file')
         if uploaded_file is not None:
-            df = pd.read_csv(uploaded_file)
-            loan_info = df.to_dict('records')
+            df = pd.read_csv(uploaded_file) 
+            loan_info = df.to_dict(orient='records')
         else:
             loan_info = []
  
@@ -39,21 +39,27 @@ def app():
         return response.status_code, response.json()
  
     if st.button('Predict'):
-        status, prediction = get_prediction(loan_info)
-        df = pd.DataFrame([loan_info])
-
-        if status == 200:
-            if prediction is not None:
-                if prediction['Loan_Acceptance'] == 'Accepted':
-                    df['acceptance'] = ["ACCEPTED"]
-                    st.write('Your loan application is accepted.')
-                elif prediction['Loan_Acceptance'] == 'Rejected':
-                    df['acceptance'] = ["REJECTED"]
-                    st.write('Your loan application is rejected.')
-
-            st.dataframe(df)  
+        status, predictions = get_prediction(loan_info)
+        df = pd.DataFrame(loan_info)
+        df['acceptance'] = "Unknown"
+        
+        st.dataframe(df)
+     
+        if status == 200: 
+            for index, prediction in predictions.items(): 
+                new_index = int(index) 
+                
+                if prediction is not None:
+                    if prediction['Loan_Acceptance'] == 'Accepted': 
+                        df.at[new_index, 'acceptance']= "ACCEPTED"
+                        st.write('Your loan application is accepted.')
+                    elif prediction['Loan_Acceptance'] == 'Rejected':
+                        df.at[new_index, 'acceptance']= "REJECTED"
+                        st.write('Your loan application is rejected.')
+                     
+            st.dataframe(df)
         else:
-            st.write(f'Sorry, there was an error making the prediction. Please try again later. Error message - {prediction}')
+            st.write(f'Sorry, there was an error making the prediction. Please try again later. Error message - {predictions}')
             
 def home():
     st.title("Hello, this is loan prediction")
