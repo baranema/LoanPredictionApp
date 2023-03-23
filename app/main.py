@@ -1,12 +1,12 @@
 import streamlit as st
-import step1
+from step1 import acc_pred
 
 def main_page():
     st.markdown("# Loan Prediction App 🎈")
     st.sidebar.markdown("# Loan Prediction App 🎈")
 
 def page1():
-    step1.app()
+    acc_pred()
 
 page_names_to_funcs = {
     "Home": main_page,

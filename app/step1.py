@@ -6,7 +6,7 @@ import pandas as pd
 API_URL = 'https://step1model.herokuapp.com/step1_accepted_rejected_prediction/'
 
 # Define the streamlit app
-def app():
+def acc_pred():
     st.title('Loan Acceptance Prediction')
     st.write('Enter the following details to check if your loan application will be accepted or rejected:')
 
@@ -58,8 +58,4 @@ def app():
         else:
             st.write(f'Sorry, there was an error making the prediction. Please try again later. Error message - {predictions}')
             
-def home():
-    st.title("Hello, this is loan prediction")
-    st.markdown(f"Click [here](/loan_acceptance) to go to the loan acceptance app endpoint.")
- 
-app()
+acc_pred()
