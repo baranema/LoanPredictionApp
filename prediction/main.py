@@ -9,7 +9,7 @@ ACCEPTED_REJECTED_MAPPING = {0: "Rejected", 1: "Accepted"}
  
 @app.get("/")
 def home():
-    return {"message":"Hello. This is loan acceptance prediction ;]"}
+    return {"message":"Hello. This is loan acceptance prediction."}
 
 def predict_accepted_rejected(model, loans): 
     results = {}
