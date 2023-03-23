@@ -1,5 +1,6 @@
 from typing import Optional
 from pydantic import Field, BaseModel, validator
+import re
 
 EMP_LENGTH_MAPPING = {
     '< 1 year': 0,
@@ -53,9 +54,11 @@ class LoanStep1(BaseModel):
     @validator("emp_length")
     def emp_length_must_have_value(cls, value): 
         if value not in EMP_LENGTH_MAPPING.keys(): 
-            if value.isnumeric():
+            if value.isnumeric(): 
                 value = int(value)
-            
+            elif re.match(r'^-?\d+(?:\.\d+)$', value):
+                value = int(float(value))
+             
             if value not in EMP_LENGTH_MAPPING.values():
                 raise ValueError(f"expected emp_length values are {list(EMP_LENGTH_MAPPING.keys())}. Received value - {value}")
         

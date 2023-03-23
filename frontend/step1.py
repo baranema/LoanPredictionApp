@@ -43,20 +43,17 @@ def app():
         df = pd.DataFrame(loan_info)
         df['acceptance'] = "Unknown"
         
-        st.dataframe(df)
-     
         if status == 200: 
             for index, prediction in predictions.items(): 
-                new_index = int(index) 
-                
+                new_index = int(index)
                 if prediction is not None:
                     if prediction['Loan_Acceptance'] == 'Accepted': 
                         df.at[new_index, 'acceptance']= "ACCEPTED"
                         st.write('Your loan application is accepted.')
+                        st.subheader('Your loan application is :green[ACCEPTED].')
                     elif prediction['Loan_Acceptance'] == 'Rejected':
                         df.at[new_index, 'acceptance']= "REJECTED"
-                        st.write('Your loan application is rejected.')
-                     
+                        st.subheader('Your loan application is :red[REJECTED].')
             st.dataframe(df)
         else:
             st.write(f'Sorry, there was an error making the prediction. Please try again later. Error message - {predictions}')
