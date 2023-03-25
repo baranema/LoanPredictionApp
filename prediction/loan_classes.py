@@ -370,7 +370,6 @@ class LoanStep3(BaseModel):
     def get_entry_dict(self):
         data = {}
         for col, val in vars(self).items():
-
             if col == "purpose":
                 if val not in PURPOSE_MAPPING.values():
                     data["purpose"] = [PURPOSE_MAPPING[self.purpose]]
@@ -535,11 +534,9 @@ class LoanStep4(BaseModel):
     def dti_joint_joint_validator(cls, value):
         if "float" in str(type(value)) or "int" in str(type(value)):
             if value < 0:
-                raise ValueError(
-                    "expected dti_joint values must be greater than 0.")
+                raise ValueError("expected dti_joint values must be greater than 0.")
         elif value != "nan":
-            raise ValueError(
-                "expected dti_joint value is 'nan' or numeric value.")
+            raise ValueError("expected dti_joint value is 'nan' or numeric value.")
         return value
 
     @validator("verification_status")
@@ -603,7 +600,6 @@ class LoanStep4(BaseModel):
     def get_entry_dict(self):
         data = {}
         for col, val in vars(self).items():
-
             if col == "term":
                 if val not in TERM_MAPPING.values():
                     data["term"] = [TERM_MAPPING[self.term]]
