@@ -18,3 +18,4 @@ pandas
 imblearn
 lightgbm
 requests
+scikit-learn
