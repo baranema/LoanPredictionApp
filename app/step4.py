@@ -31,11 +31,11 @@ def int_rate_pred():
             
             if status == 200: 
                 for index, prediction in predictions.items():
-                    new_index = int(index)
-                    # if prediction is not None:
-                    #     df.at[new_index, 'int_rate']= prediction
+                    new_index = int(index) 
+                    if prediction is not None:
+                        df.at[new_index, 'int_rate']= prediction
                              
-               # df = df.sort_values(by="int_rate", ascending=False) 
+                df = df.sort_values(by="int_rate", ascending=True) 
                 st.dataframe(df) 
                 
             else:
