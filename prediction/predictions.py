@@ -92,4 +92,6 @@ def predict_int_rate(model, loans):
         new_entry = pd.DataFrame.from_dict(loan.get_entry_dict())
         main_prediction = model.predict(new_entry)
         results[i] = main_prediction[0]
+        i+=1
+
     return results
