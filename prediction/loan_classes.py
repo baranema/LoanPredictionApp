@@ -239,56 +239,39 @@ class LoanStep2(BaseModel):
 
 
 class LoanStep3(BaseModel):
-    open_rv_12m: Optional[float] = Field(8.0, ge=0)
-    mo_sin_rcnt_tl: Optional[float] = Field(3.0, ge=0)
-    annual_inc: Optional[float] = Field(76600.0, ge=0)
-    sec_app_fico_range_high: Optional[float] = Field(654.0, ge=0)
-    sec_app_fico_range_low: float = 650.0
-    verification_status_joint: str = "Not Verified"
-    bc_open_to_buy: Optional[float] = Field(15507.0, ge=0)
-    purpose: str = "debt_consolidation"
-    mort_acc: Optional[float] = Field(0.0, ge=0)
-    loan_amnt: Optional[float] = Field(20000.0, ge=1)
-    inq_fi: Optional[float] = Field(8.0, ge=0)
-    emp_length: Optional[float] = Field(0, ge=0)
-    fico_range_low: Optional[float] = Field(675.0, ge=0)
-    bc_util: Optional[float] = Field(45.0, ge=0)
-    num_rev_accts: Optional[float] = Field(45.0, ge=0)
-    acc_open_past_24mths: Optional[float] = Field(22.0, ge=0)
-    pct_tl_nvr_dlq: Optional[float] = Field(84.5, ge=0)
-    mo_sin_old_il_acct: Optional[float] = Field(122.0, ge=0)
-    fico_range_high: Optional[float] = Field(679.0, ge=0)
-    grade: Optional[float] = Field(6, ge=0)
-    sec_app_num_rev_accts: float = 25.0
-    mths_since_recent_revol_delinq: Optional[float] = Field(62.0, ge=0)
-    max_bal_bc: Optional[float] = Field(6567.0, ge=0)
-    mo_sin_rcnt_rev_tl_op: Optional[float] = Field(3.0, ge=0)
-    annual_inc_joint: float = 109888.0
-    num_rev_tl_bal_gt_0: Optional[float] = Field(11.0, ge=0)
-    total_bc_limit: Optional[float] = Field(28200.0, ge=0)
-    term: Optional[float] = Field(60, ge=0)
-    num_sats: Optional[float] = Field(35.0, ge=0)
-    num_tl_op_past_12m: Optional[float] = Field(9.0, ge=0)
-    total_rev_hi_lim: Optional[float] = Field(53600.0, ge=0)
-    home_ownership: str = "RENT"
-    inq_last_12m: Optional[float] = Field(15.0, ge=0)
-    sec_app_mort_acc: float = 0.0
-    all_util: Optional[float] = Field(37.0, ge=0)
-    verification_status: str = "Verified"
-    percent_bc_gt_75: Optional[float] = Field(14.3, ge=0)
-
-    @validator("sec_app_num_rev_accts")
-    def sec_app_num_rev_accts_validator(cls, value):
-        if "float" in str(type(value)) or "int" in str(type(value)):
-            if value < 0:
-                raise ValueError(
-                    "expected sec_app_num_rev_accts values must be greater than 0."
-                )
-        elif value != "nan":
-            raise ValueError(
-                "expected sec_app_num_rev_accts value is 'nan' or numeric value."
-            )
-        return value
+    home_ownership: str = "MORTGAGE"
+    open_rv_24m: Optional[float] = Field(5.0, ge=0)
+    percent_bc_gt_75: Optional[float] = Field(44.4, ge=0)
+    num_tl_op_past_12m: Optional[float] = Field(3.0, ge=0)
+    emp_length: Optional[float] = Field(3.0, ge=0)
+    purpose: str = "credit_card"
+    mo_sin_rcnt_tl: Optional[float] = Field(4.0, ge=0)
+    total_bc_limit: Optional[float] = Field(10700.0, ge=0)
+    annual_inc_joint: float = 115000.0
+    sec_app_fico_range_low: Optional[float] = Field(660.0, ge=0)
+    num_op_rev_tl: Optional[float] = Field(9.0, ge=0)
+    verification_status_joint: str = "Source Verified"
+    fico_range_low: Optional[float] = Field(685.0, ge=0)
+    inq_fi: Optional[float] = Field(5.0, ge=0)
+    grade: str = "B"
+    sec_app_fico_range_high: Optional[float] = Field(664.0, ge=0)
+    annual_inc: Optional[float] = Field(50000.0, ge=0)
+    bc_open_to_buy: Optional[float] = Field(5594.0, ge=0)
+    verification_status: str = "Source Verified"
+    total_rev_hi_lim: Optional[float] = Field(10700.0, ge=0)
+    bc_util: Optional[float] = Field(47.7, ge=0)
+    total_bal_ex_mort: Optional[float] = Field(76099.0, ge=0)
+    inq_last_12m: Optional[float] = Field(2.0, ge=0)
+    mo_sin_old_il_acct: Optional[float] = Field(140.0, ge=0)
+    term: Optional[float] = Field(36, ge=0)
+    loan_amnt: Optional[float] = Field(8600.0, ge=1)
+    fico_range_high: Optional[float] = Field(689.0, ge=0)
+    mo_sin_rcnt_rev_tl_op: Optional[float] = Field(4.0, ge=0)
+    open_rv_12m: Optional[float] = Field(2.0, ge=0)
+    revol_bal: Optional[float] = Field(5106.0, ge=0)
+    acc_open_past_24mths: Optional[float] = Field(8.0, ge=0)
+    revol_bal_joint: float = 13282.0
+    all_util: Optional[float] = Field(83.0, ge=0)
 
     @validator("sec_app_fico_range_low")
     def sec_app_fico_range_low_validator(cls, value):
@@ -313,19 +296,6 @@ class LoanStep3(BaseModel):
         elif value != "nan":
             raise ValueError(
                 "expected sec_app_fico_range_high value is 'nan' or numeric value."
-            )
-        return value
-
-    @validator("sec_app_mort_acc")
-    def sec_app_mort_acc_validator(cls, value):
-        if "float" in str(type(value)) or "int" in str(type(value)):
-            if value < 0:
-                raise ValueError(
-                    "expected sec_app_mort_acc values must be greater than 0."
-                )
-        elif value != "nan":
-            raise ValueError(
-                "expected sec_app_mort_acc value is 'nan' or numeric value."
             )
         return value
 
