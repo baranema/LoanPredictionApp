@@ -2,9 +2,9 @@ import re
 from typing import Optional
 
 from pydantic import BaseModel, Field, validator
-
 from prediction.mappings import GRADES_MAPPING, SUB_GRADE_MAPPING
 
+# Dictionary for mapping employment length values to integers
 EMP_LENGTH_MAPPING = {
     "< 1 year": 0,
     "1 year": 1,
@@ -19,6 +19,7 @@ EMP_LENGTH_MAPPING = {
     "10+ years": 10,
 }
 
+# Dictionary for mapping loan purpose values to shorter strings
 PURPOSE_MAPPING = {
     "debt_consolidation": "debt consolid",
     "small_business": "small busi",
@@ -36,25 +37,32 @@ PURPOSE_MAPPING = {
     "educational": "educ",
 }
 
+# Dictionary for mapping loan term values to integers
 TERM_MAPPING = {"60 months": 60, "36 months": 36}
 
 
 class LoanStep1(BaseModel):
     """
-    loan_amnt float64
-    dti float64
-    emp_length float64
-    purpose object
+    Represents the first step in a loan application.
     """
 
+    # The loan amount.
     loan_amnt: Optional[float] = Field(2500.0, ge=1)
+
+    # The debt-to-income ratio.
     dti: float = Field(0.308, ge=0)
+
+    # The length of employment in years.
     emp_length: str = "5 years"
+
+    # The purpose of the loan.
     purpose: str = "other"
 
+    # Ensure that emp_length is a valid value and convert to integer if necessary.
     @validator("emp_length")
     def emp_length_must_have_value(cls, value):
         if value not in EMP_LENGTH_MAPPING.keys():
+            # If value is numeric or a float represented as a string, convert to integer.
             if value.isnumeric():
                 value = int(value)
             elif re.match(r"^-?\d+(?:\.\d+)$", value):
@@ -67,6 +75,7 @@ class LoanStep1(BaseModel):
 
         return value
 
+    # Ensure that purpose is a valid value.
     @validator("purpose")
     def purpose_must_have_value(cls, value):
         if (
@@ -78,6 +87,7 @@ class LoanStep1(BaseModel):
             )
         return value
 
+    # Returns a dictionary representing the instance suitable for use in a machine learning model.
     def get_entry_dict(self):
         data = {}
         data["loan_amnt"] = [self.loan_amnt]

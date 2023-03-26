@@ -7,6 +7,16 @@ from prediction.mappings import (
 
 
 def predict_accepted_rejected(model, loans):
+    """
+    Predict loan acceptance or rejection based on a model and loan data.
+
+    Args:
+    model: A trained machine learning model.
+    loans: A list of Loan objects.
+
+    Returns:
+    A dictionary containing predicted acceptance/rejection for each loan.
+    """
     results = {}
     i = 0
 
@@ -27,6 +37,16 @@ def predict_accepted_rejected(model, loans):
 
 
 def predict_grade(model, loans):
+    """
+    Predict loan grades based on a model and loan data.
+
+    Args:
+    model: A trained machine learning model.
+    loans: A list of Loan objects.
+
+    Returns:
+    A dictionary containing predicted grade for each loan.
+    """
     results = {}
     i = 0
 
@@ -64,6 +84,16 @@ def predict_grade(model, loans):
 
 
 def predict_subgrade(model, loans):
+    """
+    Predict loan subgrades based on a model and loan data.
+
+    Args:
+    model: A trained machine learning model.
+    loans: A list of Loan objects.
+
+    Returns:
+    A dictionary containing predicted subgrade for each loan.
+    """
     results = {}
     i = 0
 
@@ -93,12 +123,20 @@ def predict_subgrade(model, loans):
 
 
 def predict_int_rate(model, loans):
+    """
+    Predicts the interest rate for a list of loans using a trained machine learning model.
+
+    Args:
+        model: A trained machine learning model with a `predict` method.
+        loans: A list of `Loan` objects, each representing a loan.
+
+    Returns:
+        A dictionary where the keys are the indices of the loans in the `loans` list
+        and the values are the predicted interest rates for each loan.
+    """
     results = {}
-    i = 0
-    for loan in loans:
+    for i, loan in enumerate(loans):
         new_entry = pd.DataFrame.from_dict(loan.get_entry_dict())
         main_prediction = model.predict(new_entry)
         results[i] = main_prediction[0]
-        i += 1
-
     return results
