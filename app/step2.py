@@ -1,3 +1,4 @@
+# Import the necessary packages
 import requests
 import streamlit as st
 import pandas as pd
@@ -5,24 +6,29 @@ import pandas as pd
 API_URL = "https://eb-loan-prediction-backend.herokuapp.com/step2_grade_prediction/"
 
 
+# Define function for loan subgrade prediction
 def grade_pred():
+    # Display title and message
     st.title("Loan Subrade Prediction")
     st.write("Upload your csv file to check anticipatory subgrade of your loan:")
 
+    # Display select box for input type and file uploader
     st.selectbox("Input Type", ["CSV Upload"])
-
     uploaded_file = st.file_uploader("Upload CSV file")
 
+    # Read CSV file and convert to dictionary if file uploaded
     if uploaded_file is not None:
         df = pd.read_csv(uploaded_file)
         loan_info = df.to_dict(orient="records")
     else:
         loan_info = []
 
+    # Function to send loan information to API and get predicted subgrades
     def get_prediction(payload):
         response = requests.post(API_URL, json=payload)
         return response.status_code, response.json()
 
+    # If "Predict" button clicked, get predicted subgrades and display in DataFrame
     if st.button("Predict"):
         status, predictions = get_prediction(loan_info)
         df = pd.DataFrame(loan_info)
