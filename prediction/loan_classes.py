@@ -313,7 +313,7 @@ class LoanStep2(BaseModel):
 
         if "fico_diff" not in list(data.keys()):
             data["fico_diff"] = [self.fico_diff]
-            
+
         if "loan_size_category" not in list(data.keys()):
             data["loan_size_category"] = [self.loan_size_category]
 
