@@ -1,7 +1,9 @@
 import re
 from typing import Optional
 
+import pandas as pd
 from pydantic import BaseModel, Field, validator
+
 from prediction.mappings import GRADES_MAPPING, SUB_GRADE_MAPPING
 
 # Dictionary for mapping employment length values to integers
@@ -107,35 +109,121 @@ class LoanStep1(BaseModel):
 
 
 class LoanStep2(BaseModel):
-    sec_app_fico_range_low: float = 660.0
-    verification_status: str = "Not Verified"
-    sec_app_fico_range_high: float = 664.0
+    bc_open_to_buy: Optional[float] = Field(12558.0, ge=0)
+    fico_range_high: Optional[float] = Field(729.0, ge=0)
+    num_tl_op_past_12m: Optional[float] = Field(5.0, ge=0)
+    sec_app_mort_acc: float = 0.0
+    revol_bal_joint: float = 17666.0
+    all_util: Optional[float] = Field(48.0, ge=0)
+    annual_inc: Optional[float] = Field(70000.0, ge=0)
+    verification_status: str = "Verified"
+    revol_bal: Optional[float] = Field(1322.0, ge=0)
+    dti: Optional[float] = Field(10.34, ge=0)
+    total_cu_tl: Optional[float] = Field(3.0, ge=0)
+    dti_joint: float = 18.74
+    mort_acc: Optional[float] = Field(5.0, ge=0)
+    inq_last_12m: Optional[float] = Field(5.0, ge=0)
+    max_bal_bc: Optional[float] = Field(942.0, ge=0)
+    sec_app_fico_range_high: float = 674.0
+    open_rv_12m: Optional[float] = Field(2.0, ge=0)
+    num_tl_120dpd_2m: Optional[float] = Field(0.0, ge=0)
     percent_bc_gt_75: Optional[float] = Field(0.0, ge=0)
-    open_rv_12m: Optional[float] = Field(5.0, ge=0)
-    bc_util: Optional[float] = Field(23.2, ge=0)
-    loan_amnt: Optional[float] = Field(28000.0, ge=1)
-    fico_range_low: Optional[float] = Field(680.0, ge=0)
-    pct_tl_nvr_dlq: Optional[float] = Field(95.2, ge=0)
-    term: Optional[float] = Field(60, ge=0)
-    num_rev_accts: Optional[float] = Field(17.0, ge=0)
-    num_bc_tl: Optional[float] = Field(9.0, ge=0)
-    inq_last_12m: Optional[float] = Field(2.0, ge=0)
-    verification_status_joint: str = "Not Verified"
-    mo_sin_rcnt_tl: Optional[float] = Field(3.0, ge=0)
-    fico_range_high: Optional[float] = Field(684.0, ge=0)
-    sec_app_num_rev_accts: float = 20.0
-    total_bc_limit: Optional[float] = Field(5500.0, ge=0)
-    bc_open_to_buy: Optional[float] = Field(4226.0, ge=0)
-    num_tl_op_past_12m: Optional[float] = Field(7.0, ge=0)
-    all_util: Optional[float] = Field(75.0, ge=0)
-    open_rv_24m: Optional[float] = Field(6.0, ge=0)
-    mo_sin_rcnt_rev_tl_op: Optional[float] = Field(6.0, ge=0)
-    acc_open_past_24mths: Optional[float] = Field(8.0, ge=0)
     inq_fi: Optional[float] = Field(0.0, ge=0)
-    purpose: str = "debt_consolidation"
-    total_bal_ex_mort: Optional[float] = Field(55767.0, ge=0)
-    total_rev_hi_lim: Optional[float] = Field(14700.0, ge=0)
-    num_il_tl: Optional[float] = Field(6.0, ge=0)
+    verification_status_joint: str = "Not Verified"
+    annual_inc_joint: float = 94000.0
+    sec_app_fico_range_low: float = 670.0
+    fico_range_low: Optional[float] = Field(725.0, ge=0)
+    term: Optional[int] = Field(60, ge=0)
+    pct_tl_nvr_dlq: Optional[float] = Field(100.0, ge=0)
+    open_rv_24m: Optional[float] = Field(2.0, ge=0)
+    purpose: str = "other"
+    loan_amnt: Optional[float] = Field(15000.0, ge=0)
+    num_actv_bc_tl: Optional[float] = Field(1.0, ge=0)
+    mo_sin_rcnt_tl: Optional[float] = Field(3.0, ge=0)
+    acc_open_past_24mths: Optional[float] = Field(5.0, ge=0)
+    fico_avg: Optional[float] = Field(727.0, ge=0)
+    sec_app_fico_avg: float = 672.0
+    fico_diff: Optional[float] = Field(4.0, ge=0)
+    sec_app_fico_diff: float = 4.0
+    loan_size_category: str = "10K - 20K"
+
+    @property
+    def loan_size_category(self):
+        bins = [0, 5000, 10000, 20000, 30000, 40000, float("inf")]
+        labels = ["< 5K", "5K - 10K", "10K - 20K", "20K - 30K", "30K - 40K", ">= 40K"]
+        if self.loan_amnt is not None:
+            return pd.cut([self.loan_amnt], bins=bins, labels=labels)[0]
+        return None
+
+    @property
+    def fico_diff(self):
+        if self.fico_range_high is not None and self.fico_range_low is not None:
+            return self.fico_range_high - self.fico_range_low
+        return None
+
+    @property
+    def sec_app_fico_diff(self):
+        if (
+            self.sec_app_fico_range_high is not None
+            and self.sec_app_fico_range_low is not None
+        ):
+            return self.sec_app_fico_range_high - self.sec_app_fico_range_low
+        return None
+
+    @property
+    def LTI(self):
+        if self.annual_inc_joint is not None:
+            return self.loan_amnt / self.annual_inc_joint
+        elif self.annual_inc_joint is not None:
+            return self.loan_amnt / self.annual_inc
+        return None
+
+    @property
+    def sec_app_fico_avg(self):
+        if self.sec_app_fico_range_low and self.sec_app_fico_range_high:
+            return (self.sec_app_fico_range_high + self.sec_app_fico_range_low) / 2
+        return None
+
+    @property
+    def fico_avg(self):
+        if self.fico_range_low and self.fico_range_high:
+            return (self.fico_range_high + self.fico_range_low) / 2
+        return None
+
+    @validator("revol_bal_joint")
+    def revol_bal_joint_validator(cls, value):
+        if "float" in str(type(value)) or "int" in str(type(value)):
+            if value < 0:
+                raise ValueError(
+                    "expected revol_bal_joint values must be greater than 0."
+                )
+        elif value != "nan":
+            raise ValueError(
+                "expected revol_bal_joint value is 'nan' or numeric value."
+            )
+        return value
+
+    @validator("sec_app_mort_acc")
+    def sec_app_mort_acc_validator(cls, value):
+        if "float" in str(type(value)) or "int" in str(type(value)):
+            if value < 0:
+                raise ValueError(
+                    "expected sec_app_mort_acc values must be greater than 0."
+                )
+        elif value != "nan":
+            raise ValueError(
+                "expected sec_app_mort_acc value is 'nan' or numeric value."
+            )
+        return value
+
+    @validator("dti_joint")
+    def dti_joint_validator(cls, value):
+        if "float" in str(type(value)) or "int" in str(type(value)):
+            if value < 0:
+                raise ValueError("expected dti_joint values must be greater than 0.")
+        elif value != "nan":
+            raise ValueError("expected dti_joint value is 'nan' or numeric value.")
+        return value
 
     @validator("term")
     def term_must_have_value(cls, value):
@@ -193,19 +281,6 @@ class LoanStep2(BaseModel):
             )
         return value
 
-    @validator("sec_app_num_rev_accts")
-    def sec_app_num_rev_accts_validator(cls, value):
-        if "float" in str(type(value)) or "int" in str(type(value)):
-            if value < 0:
-                raise ValueError(
-                    "expected sec_app_num_rev_accts values must be greater than 0."
-                )
-        elif value != "nan":
-            raise ValueError(
-                "expected sec_app_num_rev_accts value is 'nan' or numeric value."
-            )
-        return value
-
     @validator("sec_app_fico_range_low")
     def sec_app_fico_range_low_validator(cls, value):
         if "float" in str(type(value)) or "int" in str(type(value)):
@@ -234,6 +309,21 @@ class LoanStep2(BaseModel):
                     data["term"] = [self.term]
             else:
                 data[col] = [val]
+
+        if "sec_app_fico_avg" not in list(data.keys()):
+            data["sec_app_fico_avg"] = [self.sec_app_fico_avg]
+
+        if "fico_avg" not in list(data.keys()):
+            data["fico_avg"] = [self.fico_avg]
+
+        if "fico_diff" not in list(data.keys()):
+            data["fico_diff"] = [self.fico_diff]
+
+        if "loan_size_category" not in list(data.keys()):
+            data["loan_size_category"] = [self.loan_size_category]
+
+        if "sec_app_fico_diff" not in list(data.keys()):
+            data["sec_app_fico_diff"] = [self.sec_app_fico_diff]
 
         return data
 
@@ -362,46 +452,100 @@ class LoanStep3(BaseModel):
 
 
 class LoanStep4(BaseModel):
-    loan_amnt: Optional[float] = Field(16000.0, ge=1)
-    term: Optional[float] = Field(60, ge=0)
+    loan_amnt: Optional[float] = Field(25600.0, ge=0)
+    term: Optional[int] = Field(60, ge=0)
     grade: str = "B"
-    sub_grade: str = "B4"
+    sub_grade: str = "B5"
     home_ownership: str = "MORTGAGE"
-    annual_inc: Optional[float] = Field(57000.0, ge=0)
+    annual_inc: Optional[float] = Field(70000.0, ge=0)
     verification_status: str = "Not Verified"
-    purpose: str = "credit_card"
-    dti: Optional[float] = Field(13.68, ge=0)
-    fico_range_low: Optional[float] = Field(705.0, ge=0)
-    fico_range_high: Optional[float] = Field(709.0, ge=0)
-    open_acc: Optional[float] = Field(19.0, ge=0)
-    revol_bal: Optional[float] = Field(2777.0, ge=0)
+    purpose: str = "medical"
+    dti: Optional[float] = Field(29.04, ge=0)
+    fico_range_low: Optional[float] = Field(725.0, ge=0)
+    fico_range_high: Optional[float] = Field(729.0, ge=0)
+    open_acc: Optional[float] = Field(15.0, ge=0)
+    revol_bal: Optional[float] = Field(26059.0, ge=0)
     application_type: str = "Joint App"
-    annual_inc_joint: float = 89000.0
-    dti_joint: float = 10.8
+    annual_inc_joint: float = 96000.0
+    dti_joint: float = 24.76
     verification_status_joint: str = "Not Verified"
-    open_rv_12m: Optional[float] = Field(0.0, ge=0)
-    open_rv_24m: Optional[float] = Field(0.0, ge=0)
-    all_util: Optional[float] = Field(91.0, ge=0)
-    total_rev_hi_lim: Optional[float] = Field(26000.0, ge=0)
+    open_rv_12m: Optional[float] = Field(1.0, ge=0)
+    open_rv_24m: Optional[float] = Field(1.0, ge=0)
+    all_util: Optional[float] = Field(45.0, ge=0)
+    total_rev_hi_lim: Optional[float] = Field(64900.0, ge=0)
     inq_fi: Optional[float] = Field(1.0, ge=0)
     inq_last_12m: Optional[float] = Field(3.0, ge=0)
-    acc_open_past_24mths: Optional[float] = Field(3.0, ge=0)
-    bc_open_to_buy: Optional[float] = Field(14223.0, ge=0)
-    bc_util: Optional[float] = Field(16.3, ge=0)
-    mo_sin_old_rev_tl_op: Optional[float] = Field(317.0, ge=0)
-    mo_sin_rcnt_rev_tl_op: Optional[float] = Field(45.0, ge=0)
-    mo_sin_rcnt_tl: Optional[float] = Field(9.0, ge=0)
-    mort_acc: Optional[float] = Field(3.0, ge=0)
-    num_rev_accts: Optional[float] = Field(8.0, ge=0)
+    acc_open_past_24mths: Optional[float] = Field(4.0, ge=0)
+    bc_open_to_buy: Optional[float] = Field(21583.0, ge=0)
+    bc_util: Optional[float] = Field(51.6, ge=0)
+    mo_sin_old_rev_tl_op: Optional[float] = Field(313.0, ge=0)
+    mo_sin_rcnt_rev_tl_op: Optional[float] = Field(9.0, ge=0)
+    mo_sin_rcnt_tl: Optional[float] = Field(3.0, ge=0)
+    mort_acc: Optional[float] = Field(5.0, ge=0)
+    num_rev_accts: Optional[float] = Field(17.0, ge=0)
     num_tl_op_past_12m: Optional[float] = Field(2.0, ge=0)
-    percent_bc_gt_75: Optional[float] = Field(50.0, ge=0)
-    total_bc_limit: Optional[float] = Field(17000.0, ge=0)
-    revol_bal_joint: float = 11766.0
-    sec_app_fico_range_low: float = 680.0
-    sec_app_fico_range_high: float = 684.0
-    sec_app_mort_acc: float = 3.0
-    sec_app_open_acc: float = 6.0
-    sec_app_num_rev_accts: float = 7.0
+    percent_bc_gt_75: Optional[float] = Field(20.0, ge=0)
+    total_bc_limit: Optional[float] = Field(44600.0, ge=0)
+    revol_bal_joint: float = 40627.0
+    sec_app_fico_range_low: float = 705.0
+    sec_app_fico_range_high: float = 709.0
+    sec_app_mort_acc: float = 5.0
+    sec_app_open_acc: float = 11.0
+    sec_app_num_rev_accts: float = 13.0
+
+    @property
+    def fico_avg(self):
+        if self.fico_range_high is not None and self.fico_range_low is not None:
+            return (self.fico_range_high + self.fico_range_low) / 2
+        return None
+
+    @property
+    def sec_app_fico_avg(self):
+        if (
+            self.sec_app_fico_range_high is not None
+            and self.sec_app_fico_range_low is not None
+        ):
+            return (self.sec_app_fico_range_high + self.sec_app_fico_range_low) / 2
+        return None
+
+    @property
+    def fico_diff(self):
+        if self.fico_range_high is not None and self.fico_range_low is not None:
+            return self.fico_range_high - self.fico_range_low
+        return None
+
+    @property
+    def sec_app_fico_diff(self):
+        if (
+            self.sec_app_fico_range_high is not None
+            and self.sec_app_fico_range_low is not None
+        ):
+            return self.sec_app_fico_range_high - self.sec_app_fico_range_low
+        return None
+
+    @property
+    def LTI(self):
+        if self.annual_inc_joint is not None:
+            return self.loan_amnt / self.annual_inc_joint
+        elif self.annual_inc_joint is not None:
+            return self.loan_amnt / self.annual_inc
+        return None
+
+    @property
+    def DTI_Category(self):
+        bins = [0, 15, 25, float("inf")]
+        labels = ["DTI < 15%", "15% <= DTI <= 25%", "DTI > 25%"]
+        if self.dti is not None:
+            return pd.cut([self.dti], bins=bins, labels=labels)[0]
+        return None
+
+    @property
+    def loan_size_category(self):
+        bins = [0, 5000, 10000, 20000, 30000, 40000, float("inf")]
+        labels = ["< 5K", "5K - 10K", "10K - 20K", "20K - 30K", "30K - 40K", ">= 40K"]
+        if self.loan_amnt is not None:
+            return pd.cut([self.loan_amnt], bins=bins, labels=labels)[0]
+        return None
 
     @validator("sec_app_open_acc")
     def sec_app_open_acc_validator(cls, value):
@@ -511,7 +655,7 @@ class LoanStep4(BaseModel):
         return value
 
     @validator("dti_joint")
-    def dti_joint_joint_validator(cls, value):
+    def dti_joint_validator(cls, value):
         if "float" in str(type(value)) or "int" in str(type(value)):
             if value < 0:
                 raise ValueError("expected dti_joint values must be greater than 0.")
@@ -587,5 +731,26 @@ class LoanStep4(BaseModel):
                     data["term"] = [self.term]
             else:
                 data[col] = [val]
+
+        if "sec_app_fico_avg" not in list(data.keys()):
+            data["sec_app_fico_avg"] = [self.sec_app_fico_avg]
+
+        if "fico_avg" not in list(data.keys()):
+            data["fico_avg"] = [self.fico_avg]
+
+        if "LTI" not in list(data.keys()):
+            data["LTI"] = [self.LTI]
+
+        if "fico_diff" not in list(data.keys()):
+            data["fico_diff"] = [self.fico_diff]
+
+        if "DTI_Category" not in list(data.keys()):
+            data["DTI_Category"] = [self.DTI_Category]
+
+        if "loan_size_category" not in list(data.keys()):
+            data["loan_size_category"] = [self.loan_size_category]
+
+        if "sec_app_fico_diff" not in list(data.keys()):
+            data["sec_app_fico_diff"] = [self.sec_app_fico_diff]
 
         return data
