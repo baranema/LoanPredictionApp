@@ -1,0 +1,11 @@
+loan_amnt,dti,emp_length,purpose
+3600.0,0.16649999999999998,7.0,debt consolid
+10000.0,0.2339,2.0,debt consolid
+8000.0,0.3055,0.0,other
+3000.0,0.20350000000000001,3.0,debt consolid
+2400.0,0.2211,0.0,other
+5600.0,0.1258,0.0,medic
+29000.0,0.3604,0.0,debt consolid
+8000.0,0.2346,10.0,major purchas
+6000.0,0.2447,0.0,credit card
+8000.0,0.1456,2.0,debt consolid
