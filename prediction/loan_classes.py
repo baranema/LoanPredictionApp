@@ -297,12 +297,7 @@ class LoanStep2(BaseModel):
     def get_entry_dict(self):
         data = {}
         for col, val in vars(self).items():
-            if col == "purpose":
-                if val not in PURPOSE_MAPPING.values():
-                    data["purpose"] = [PURPOSE_MAPPING[self.purpose]]
-                else:
-                    data["purpose"] = [self.purpose]
-            elif col == "term":
+            if col == "term":
                 if val not in TERM_MAPPING.values():
                     data["term"] = [TERM_MAPPING[self.term]]
                 else:
@@ -318,7 +313,7 @@ class LoanStep2(BaseModel):
 
         if "fico_diff" not in list(data.keys()):
             data["fico_diff"] = [self.fico_diff]
-
+            
         if "loan_size_category" not in list(data.keys()):
             data["loan_size_category"] = [self.loan_size_category]
 
