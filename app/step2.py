@@ -1,7 +1,7 @@
 # Import the necessary packages
+import pandas as pd
 import requests
 import streamlit as st
-import pandas as pd
 
 API_URL = "https://eb-loan-prediction-backend.herokuapp.com/step2_grade_prediction/"
 
@@ -26,15 +26,11 @@ def grade_pred():
     # Function to send loan information to API and get predicted grades
     def get_prediction(payload):
         response = requests.post(API_URL, json=payload)
-        print(response)
-        print(payload)
         return response.status_code, response.json()
 
     # If "Predict" button clicked, get predicted grades and display in DataFrame
     if st.button("Predict"):
-        print("OKKKKK")
         status, predictions = get_prediction(loan_info)
-        print("XAXAXAXA")
 
         df = pd.DataFrame(loan_info)
 
