@@ -1,9 +1,7 @@
 import pandas as pd
-from prediction.mappings import (
-    ACCEPTED_REJECTED_MAPPING,
-    GRADES_MAPPING,
-    SUB_GRADE_MAPPING,
-)
+
+from prediction.mappings import (ACCEPTED_REJECTED_MAPPING, GRADES_MAPPING,
+                                 SUB_GRADE_MAPPING)
 
 
 def predict_accepted_rejected(model, loans):
@@ -107,11 +105,23 @@ def predict_subgrade(model, loans):
         probs = predicted_proba.tolist()[0]
 
         subgrades_res = {subgrades[i]: probs[i] for i in range(len(subgrades))}
-
         sorted_items = sorted(subgrades_res.items(), key=lambda x: x[1], reverse=True)
-        res_subrades = [sorted_items[i][0] for i in range(5)]
 
-        res_str = f"{res_subrades[0]}-{res_subrades[len(res_subrades)-1]}"
+        valid_sub_grades = {}
+
+        for subgrade, score in sorted_items:
+            if subgrade[0] == new_entry.grade[0]:
+                valid_sub_grades[subgrade] = score
+
+        res_str = (
+            f"{list(valid_sub_grades.keys())[0]}-{list(valid_sub_grades.keys())[1]}"
+        )
+        if int(list(valid_sub_grades.keys())[0][1]) > int(
+            list(valid_sub_grades.keys())[1][1]
+        ):
+            res_str = (
+                f"{list(valid_sub_grades.keys())[1]}-{list(valid_sub_grades.keys())[0]}"
+            )
 
         results[i] = {
             "subgrade_category": res_str,
